@@ -1,0 +1,35 @@
+services:
+  aspnet-app:
+    build: .
+    container_name: aspnet-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql-db
+    networks:
+      project-net:
+        ipv4_address: 192.168.60.10
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    volumes:
+      - ./db:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      project-net:
+        ipv4_address: 192.168.60.20
+
+networks:
+  project-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.60.0/24

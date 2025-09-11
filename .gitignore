@@ -1,0 +1,44 @@
+# Visual Studio / ASP.NET
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings
+
+# ASP.NET publish output
+wwwroot/lib/
+wwwroot/css/
+wwwroot/js/
+wwwroot/dist/
+
+# Node / npm (si en algún momento usas paquetes)
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# Docker
+docker-compose.override.yml
+*.env
+**/docker-compose.override.yml
+**/.env
+
+# Logs
+*.log
+*.tmp
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# JetBrains Rider (si lo usas)
+.idea/
+
+# VS Code
+.vscode/
+
+# MySQL / base de datos
+db/
+*.sql
