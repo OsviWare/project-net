@@ -1,0 +1,88 @@
+@model WebApp.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Registrarse";
+    Layout = "_LayoutAuth";
+}
+
+<div class="row justify-content-center">
+    <div class="col-xl-8 col-lg-8 col-md-9">
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">
+                                    <i class="fas fa-recycle text-primary"></i> Crear una cuenta en BoliviaMarket
+                                </h1>
+                            </div>
+                            
+                            <form asp-action="Register" method="post" class="user">
+                                @Html.AntiForgeryToken()
+                                
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <input asp-for="FullName" class="form-control form-control-user" 
+                                               placeholder="Nombre completo" />
+                                        <span asp-validation-for="FullName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <input asp-for="Email" class="form-control form-control-user" 
+                                           placeholder="Email" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input asp-for="Password" type="password" class="form-control form-control-user" 
+                                               placeholder="Contraseña" />
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input asp-for="ConfirmPassword" type="password" class="form-control form-control-user" 
+                                               placeholder="Repetir contraseña" />
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input asp-for="PhoneNumber" class="form-control form-control-user" 
+                                               placeholder="Teléfono" />
+                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input asp-for="City" class="form-control form-control-user" 
+                                               placeholder="Ciudad" />
+                                        <span asp-validation-for="City" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary btn-user btn-block">
+                                    Registrar Cuenta
+                                </button>
+                            </form>
+                            
+                            <hr>
+                            
+                            <div class="text-center">
+                                <a class="small" asp-action="Login">¿Ya tienes una cuenta? ¡Inicia sesión!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
