@@ -1,0 +1,83 @@
+:root {
+    --color-bolivia-red: #D52B1E;
+    --color-bolivia-yellow: #F9E300;
+    --color-bolivia-green: #007934;
+}
+
+body {
+    background-color: #f8f9fc;
+    font-family: 'Nunito', sans-serif;
+}
+
+.category-card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.category-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.color-red { color: var(--color-bolivia-red); }
+.color-yellow { color: var(--color-bolivia-yellow); }
+.color-green { color: var(--color-bolivia-green); }
+
+.category-item {
+    padding: 25px 15px;
+    text-align: center;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.category-item:hover {
+    background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+}
+
+.category-title {
+    font-weight: 700;
+    color: #2e3a59;
+    margin-bottom: 0;
+}
+
+.section-title {
+    color: #2e3a59;
+    font-weight: 800;
+    border-left: 5px solid var(--color-bolivia-red);
+    padding-left: 15px;
+    margin-bottom: 25px;
+}
+
+.btn-bolivia {
+    background: linear-gradient(to right, var(--color-bolivia-red), var(--color-bolivia-yellow), var(--color-bolivia-green));
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 25px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.btn-bolivia:hover {
+    background: linear-gradient(to right, var(--color-bolivia-green), var(--color-bolivia-yellow), var(--color-bolivia-red));
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.header-section {
+    background: linear-gradient(90deg, rgba(213,43,30,0.1) 0%, rgba(249,227,0,0.1) 50%, rgba(0,121,52,0.1) 100%);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}

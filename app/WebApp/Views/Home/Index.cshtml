@@ -1,8 +1,292 @@
 ﻿@{
+    // CONFIGURACIÓN DEL TÍTULO DE LA PÁGINA PARA EL LAYOUT
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- CONTENEDOR PRINCIPAL DE LA PÁGINA -->
+<div class="container-fluid">
+    
+    <!-- SECCIÓN HERO/BIENVENIDA -->
+    <div class="hero-section text-center">
+        <h1 class="h3 mb-2">¡Bienvenido a BoliviaMarket!</h1>
+        <p class="mb-4">La plataforma donde lo que ya no usas puede ser el tesoro de alguien más</p>
+        <!-- BOTÓN PARA PUBLICAR PRODUCTO -->
+        <a href="#" class="btn btn-light btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-plus"></i>
+            </span>
+            <span class="text">Publicar un producto</span>
+        </a>
+    </div>
+    
+
+    <!-- FILA DE CONTENIDO: CATEGORÍAS POPULARES -->
+    <div class="row">
+        <!-- SECCIÓN DE CATEGORÍAS POPULARES -->
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <!-- ENCABEZADO DE LA TARJETA DE CATEGORÍAS -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Categorías Populares</h6>
+                    <!-- BOTÓN PARA VER TODAS LAS CATEGORÍAS -->
+                    <a href="#" class="btn btn-sm btn-primary">Ver todas</a>
+                </div>
+                <!-- CUERPO DE LA TARJETA DE CATEGORÍAS -->
+                <div class="card-body">
+                    <div class="row">
+                        <!-- CATEGORÍA 1: ROPA -->
+                        <div class="col-md-2 col-sm-4 text-center mb-3">
+                            <div class="category-item p-3 rounded">
+                                <i class="fas fa-tshirt fa-2x mb-2 flag-color-1"></i>
+                                <h6 class="font-weight-bold">Ropa</h6>
+                            </div>
+                        </div>
+                        
+                        <!-- CATEGORÍA 2: TECNOLOGÍA -->
+                        <div class="col-md-2 col-sm-4 text-center mb-3">
+                            <div class="category-item p-3 rounded">
+                                <i class="fas fa-mobile-alt fa-2x mb-2 flag-color-2"></i>
+                                <h6 class="font-weight-bold">Tecnología</h6>
+                            </div>
+                        </div>
+                        
+                        <!-- CATEGORÍA 3: HOGAR -->
+                        <div class="col-md-2 col-sm-4 text-center mb-3">
+                            <div class="category-item p-3 rounded">
+                                <i class="fas fa-couch fa-2x mb-2 flag-color-3"></i>
+                                <h6 class="font-weight-bold">Hogar</h6>
+                            </div>
+                        </div>
+                        
+                        <!-- CATEGORÍA 4: DEPORTES -->
+                        <div class="col-md-2 col-sm-4 text-center mb-3">
+                            <div class="category-item p-3 rounded">
+                                <i class="fas fa-futbol fa-2x mb-2 flag-color-1"></i>
+                                <h6 class="font-weight-bold">Deportes</h6>
+                            </div>
+                        </div>
+                        
+                        <!-- CATEGORÍA 5: LIBROS -->
+                        <div class="col-md-2 col-sm-4 text-center mb-3">
+                            <div class="category-item p-3 rounded">
+                                <i class="fas fa-book fa-2x mb-2 flag-color-2"></i>
+                                <h6 class="font-weight-bold">Libros</h6>
+                            </div>
+                        </div>
+                        
+                        <!-- CATEGORÍA 6: MÁS (CATEGORÍAS ADICIONALES) -->
+                        <div class="col-md-2 col-sm-4 text-center mb-3">
+                            <div class="category-item p-3 rounded">
+                                <i class="fas fa-ellipsis-h fa-2x mb-2 flag-color-3"></i>
+                                <h6 class="font-weight-bold">Más</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILA DE CONTENIDO: PRODUCTOS DESTACADOS -->
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <!-- ENCABEZADO DE LA TARJETA DE PRODUCTOS DESTACADOS -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Productos Destacados</h6>
+                    <!-- MENÚ DESPLEGABLE PARA FILTRAR PRODUCTOS -->
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <!-- OPCIONES DE FILTRADO -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">Filtrar por:</div>
+                            <a class="dropdown-item" href="#">Más recientes</a>
+                            <a class="dropdown-item" href="#">Menor precio</a>
+                            <a class="dropdown-item" href="#">Mayor precio</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- CUERPO DE LA TARJETA DE PRODUCTOS DESTACADOS -->
+                <div class="card-body">
+                    <div class="row">
+                        <!-- PRODUCTO 1: SMARTWATCH SAMSUNG -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2 product-card position-relative">
+                                <!-- BADGE INDICANDO QUE ES NUEVO -->
+                                <span class="badge badge-success category-badge">Nuevo</span>
+                                <!-- IMAGEN DEL PRODUCTO -->
+                                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Smartwatch" style="height: 180px; object-fit: cover;">
+                                <!-- INFORMACIÓN DEL PRODUCTO -->
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Smartwatch Samsung</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Bs. 450</div>
+                                            <!-- UBICACIÓN DEL PRODUCTO -->
+                                            <div class="text-sm mb-0 text-gray-500"><i class="fas fa-map-marker-alt"></i> La Paz</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- PIE DE TARJETA CON ACCIONES -->
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a href="#" class="small text-primary">Ver detalles</a>
+                                    <!-- ICONO DE FAVORITOS (LLENO) -->
+                                    <div class="small text-gray-600"><i class="fas fa-heart"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PRODUCTO 2: ZAPATILLAS NIKE (SEGUNDA MANO) -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2 product-card position-relative">
+                                <!-- BADGE INDICANDO QUE ES DE SEGUNDA MANO -->
+                                <span class="badge badge-warning category-badge">2da mano</span>
+                                <!-- IMAGEN DEL PRODUCTO -->
+                                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Zapatillas" style="height: 180px; object-fit: cover;">
+                                <!-- INFORMACIÓN DEL PRODUCTO -->
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Zapatillas Nike</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Bs. 280</div>
+                                            <!-- UBICACIÓN DEL PRODUCTO -->
+                                            <div class="text-sm mb-0 text-gray-500"><i class="fas fa-map-marker-alt"></i> Santa Cruz</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- PIE DE TARJETA CON ACCIONES -->
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a href="#" class="small text-primary">Ver detalles</a>
+                                    <!-- ICONO DE FAVORITOS (VACÍO) -->
+                                    <div class="small text-gray-600"><i class="far fa-heart"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PRODUCTO 3: AUDÍFONOS BLUETOOTH -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2 product-card position-relative">
+                                <!-- BADGE INDICANDO QUE ES NUEVO -->
+                                <span class="badge badge-success category-badge">Nuevo</span>
+                                <!-- IMAGEN DEL PRODUCTO -->
+                                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Audífonos" style="height: 180px; object-fit: cover;">
+                                <!-- INFORMACIÓN DEL PRODUCTO -->
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Audífonos Bluetooth</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Bs. 150</div>
+                                            <!-- UBICACIÓN DEL PRODUCTO -->
+                                            <div class="text-sm mb-0 text-gray-500"><i class="fas fa-map-marker-alt"></i> Cochabamba</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- PIE DE TARJETA CON ACCIONES -->
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a href="#" class="small text-primary">Ver detalles</a>
+                                    <!-- ICONO DE FAVORITOS (VACÍO) -->
+                                    <div class="small text-gray-600"><i class="far fa-heart"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PRODUCTO 4: CÁMARA CANON DSLR (SEGUNDA MANO) -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2 product-card position-relative">
+                                <!-- BADGE INDICANDO QUE ES DE SEGUNDA MANO -->
+                                <span class="badge badge-warning category-badge">2da mano</span>
+                                <!-- IMAGEN DEL PRODUCTO -->
+                                <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Cámara" style="height: 180px; object-fit: cover;">
+                                <!-- INFORMACIÓN DEL PRODUCTO -->
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Cámara Canon DSLR</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Bs. 1200</div>
+                                            <!-- UBICACIÓN DEL PRODUCTO -->
+                                            <div class="text-sm mb-0 text-gray-500"><i class="fas fa-map-marker-alt"></i> La Paz</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- PIE DE TARJETA CON ACCIONES -->
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a href="#" class="small text-primary">Ver detalles</a>
+                                    <!-- ICONO DE FAVORITOS (LLENO) -->
+                                    <div class="small text-gray-600"><i class="fas fa-heart"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILA DE CONTENIDO: INFORMACIÓN ADICIONAL -->
+    <div class="row">
+        <!-- TARJETA: ¿POR QUÉ ELEGIRNOS? -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <!-- ENCABEZADO DE LA TARJETA -->
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">¿Por qué elegir BoliviaMarket?</h6>
+                </div>
+                <!-- CUERPO DE LA TARJETA -->
+                <div class="card-body">
+                    <!-- IMAGEN ILUSTRATIVA -->
+                    <div class="text-center">
+                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 15rem;" src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="E-commerce">
+                    </div>
+                    <!-- DESCRIPCIÓN DE LA PLATAFORMA -->
+                    <p>En BoliviaMarket promovemos el comercio local y la reutilización de productos, contribuyendo a la economía circular en Bolivia.</p>
+                    <!-- LISTA DE VENTAJAS -->
+                    <ul>
+                        <li>Transacciones seguras en Bolivianos</li>
+                        <li>Comunicación directa entre comprador y vendedor</li>
+                        <li>Sistema de valoraciones y reputación</li>
+                        <li>Fácil de usar desde cualquier dispositivo</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- TARJETA: ESTADÍSTICAS E IMPACTO -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <!-- ENCABEZADO DE LA TARJETA -->
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Nuestro Impacto</h6>
+                </div>
+                <!-- CUERPO DE LA TARJETA CON ESTADÍSTICAS -->
+                <div class="card-body">
+                    <!-- ESTADÍSTICA 1: PRODUCTOS VENDIDOS -->
+                    <h4 class="small font-weight-bold">Productos vendidos <span class="float-right">1,254</span></h4>
+                    <div class="progress mb-4">
+                        <div class="progress-bar flag-color-1" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    
+                    <!-- ESTADÍSTICA 2: USUARIOS REGISTRADOS -->
+                    <h4 class="small font-weight-bold">Usuarios registrados <span class="float-right">3,587</span></h4>
+                    <div class="progress mb-4">
+                        <div class="progress-bar flag-color-2" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    
+                    <!-- ESTADÍSTICA 3: TRANSACCIONES MENSUALES -->
+                    <h4 class="small font-weight-bold">Transacciones mensuales <span class="float-right">446</span></h4>
+                    <div class="progress mb-4">
+                        <div class="progress-bar flag-color-3" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    
+                    <!-- ESTADÍSTICA 4: SATISFACCIÓN DEL USUARIO -->
+                    <h4 class="small font-weight-bold">Satisfacción del usuario <span class="float-right">92%</span></h4>
+                    <div class="progress mb-4">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 92%" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<!-- FIN DEL CONTENEDOR PRINCIPAL -->

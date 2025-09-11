@@ -6,6 +6,8 @@ services:
       - "8080:8080"
     depends_on:
       - mysql-db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
     networks:
       project-net:
         ipv4_address: 192.168.60.10
@@ -20,7 +22,7 @@ services:
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppassword
     volumes:
-      - ./db:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     ports:
       - "3306:3306"
     networks:
@@ -33,3 +35,6 @@ networks:
     ipam:
       config:
         - subnet: 192.168.60.0/24
+
+volumes:
+  mysql-data:
