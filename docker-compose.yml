@@ -8,9 +8,11 @@ services:
       - mysql-db
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - MYSQL_HOST=mysql-db
+      - MYSQL_PORT=3307
     networks:
-      project-net:
-        ipv4_address: 192.168.60.10
+      - project-net
+    restart: unless-stopped
 
   mysql-db:
     image: mysql:8.0
@@ -21,20 +23,22 @@ services:
       MYSQL_DATABASE: appdb
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppassword
+    command: --port=3307  # Esto es importante!
     volumes:
       - mysql-data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "3307:3307"  # Puerto mapeado correctamente
     networks:
-      project-net:
-        ipv4_address: 192.168.60.20
+      - project-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-P", "3307", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
 networks:
   project-net:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 192.168.60.0/24
 
 volumes:
   mysql-data:

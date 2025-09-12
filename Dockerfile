@@ -1,20 +1,27 @@
+# Stage 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copiar el archivo csproj y restaurar
-COPY app/WebApp/*.csproj .
+COPY app/WebApp/*.csproj ./
 RUN dotnet restore
-
-# Copiar todo el código
-COPY app/WebApp/ .
-
-# Publicar
+COPY app/WebApp/ ./
 RUN dotnet publish -c Release -o /app/publish
 
-# Runtime image
+# Stage 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
+
+# Instalar netcat y herramientas de red
+RUN apt-get update && \
+    apt-get install -y netcat-openbsd iputils-ping telnet && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copiar la aplicación desde la etapa build
 COPY --from=build /app/publish .
 
+# Copiar entrypoint
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
+
 EXPOSE 8080
-ENTRYPOINT ["dotnet", "WebApp.dll"]
+ENTRYPOINT ["./entrypoint.sh"]

@@ -1,0 +1,23 @@
+@model List<WebApp.Models.Producto>
+
+<h2>Lista de Productos</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var producto in Model)
+        {
+            <tr>
+                <td>@producto.Id_producto</td>
+                <td>@producto.Nombre</td>
+                <td> @producto.Precio.ToString("Bs.")</td>
+            </tr>
+        }
+    </tbody>
+</table>
