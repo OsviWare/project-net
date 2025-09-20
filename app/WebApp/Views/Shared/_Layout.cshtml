@@ -110,13 +110,13 @@
             <hr class="sidebar-divider">
 
             <!-- ENCABEZADO DE SECCIÓN - MI CUENTA -->
+            @if (isAuthenticated)
+            {
             <div class="sidebar-heading">
                 Mi Cuenta
             </div>
 
             <!-- OPCIONES DE USUARIO SEGÚN AUTENTICACIÓN Y ROL -->
-            @if (isAuthenticated)
-            {
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="Producto" asp-action="Create">
                         <i class="fas fa-plus-circle"></i>
@@ -124,7 +124,7 @@
                     </a>
                 </li>
                 
-                @if (User.IsInRole("Administrador"))
+                @if (User.IsInRole("administrador"))
                 {
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Dashboard" asp-action="AdminPanel">
@@ -133,11 +133,10 @@
                         </a>
                     </li>
                 }
-            }
 
             <!-- ELEMENTOS DE NAVEGACIÓN - OPCIONES DE USUARIO -->
             <li class="nav-item">
-                <a class="nav-link" href="/Producto/Index">
+                <a class="nav-link" href="/Producto/Mine">
                     <i class="fas fa-store"></i>
                     <span>Mis Productos</span>
                 </a>
@@ -154,6 +153,7 @@
                     <span>Favoritos</span>
                 </a>
             </li>
+            }
 
             <!-- SEPARADOR (solo visible en pantallas medianas y grandes) -->
             <hr class="sidebar-divider d-none d-md-block">

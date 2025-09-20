@@ -4,6 +4,7 @@ using System.Diagnostics;
 using WebApp.Models;
 using WebApp.Data;
 using System.Linq;
+using Microsoft.EntityFrameworkCore; // ¡Añade este using!
 
 namespace WebApp.Controllers
 {
@@ -20,7 +21,7 @@ namespace WebApp.Controllers
         }
 
         [AllowAnonymous] // El home es público
-        public IActionResult Index()
+        public async Task<IActionResult> Index()  // Cambia a async Task<IActionResult>
         {
             if (User.Identity?.IsAuthenticated ?? false)
             {
@@ -35,11 +36,14 @@ namespace WebApp.Controllers
                 ViewBag.UserRole = "N/A";
             }
 
-            // 🚀 Cargar productos desde MySQL
-            var productos = _context.Productos
+            // 🚀 Cargar productos desde MySQL INCLUYENDO el Usuario
+            var productos = await _context.Productos
+                .Include(p => p.Usuario)  // ¡IMPORTANTE: Incluir el usuario!
+                .Include(p => p.Categoria) // También incluir categoría por si acaso
+                .Where(p => p.Activo)     // Solo productos activos
                 .OrderByDescending(p => p.Id)
                 .Take(10)
-                .ToList();
+                .ToListAsync();           // Usar ToListAsync()
 
             return View(productos);
         }

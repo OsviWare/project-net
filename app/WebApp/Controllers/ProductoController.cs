@@ -54,11 +54,10 @@ namespace WebApp.Controllers
             return View();
         }
 
-        // POST: Crear producto
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create(Producto model)
+        public async Task<IActionResult> Create(ProductoCreateViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -70,15 +69,26 @@ namespace WebApp.Controllers
             var uid = GetCurrentUserId();
             if (uid == null) return Forbid();
 
-            model.UsuarioId = uid.Value;
-            model.FechaCreacion = DateTime.UtcNow;
-            model.Activo = true;
-
             try
             {
-                _db.Productos.Add(model);
+                // Mapear del ViewModel al Modelo Producto
+                var producto = new Producto
+                {
+                    Nombre = model.Nombre,
+                    Descripcion = model.Descripcion,
+                    Precio = model.Precio,
+                    Stock = model.Stock,
+                    ImagenUrl = model.ImagenUrl,
+                    CategoriaId = model.CategoriaId,
+                    UsuarioId = uid.Value, // Asignar el usuario actual
+                    FechaCreacion = DateTime.UtcNow,
+                    Activo = true
+                };
+
+                _db.Productos.Add(producto);
                 await _db.SaveChangesAsync();
-                _logger.LogInformation("Producto registrado: {@Producto}", model);
+                
+                _logger.LogInformation("Producto registrado: {@Producto}", producto);
                 return RedirectToAction(nameof(Mine));
             }
             catch (Exception ex)
@@ -92,15 +102,36 @@ namespace WebApp.Controllers
 
         private int? GetCurrentUserId()
         {
-            var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
-            if (int.TryParse(idClaim, out int uid)) return uid;
+            // Primero busca el claim personalizado "usuarioId"
+            var usuarioIdClaim = User.FindFirst("usuarioId")?.Value;
+            if (!string.IsNullOrEmpty(usuarioIdClaim) && int.TryParse(usuarioIdClaim, out int uid))
+            {
+                return uid;
+            }
 
+            // Luego intenta con los claims estándar
+            var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!string.IsNullOrEmpty(idClaim) && int.TryParse(idClaim, out int standardUid))
+            {
+                return standardUid;
+            }
+
+            // Luego con claim "sub"
+            var subClaim = User.FindFirst("sub")?.Value;
+            if (!string.IsNullOrEmpty(subClaim) && int.TryParse(subClaim, out int subUid))
+            {
+                return subUid;
+            }
+
+            // Finalmente por email
             var email = User.Identity?.Name;
             if (!string.IsNullOrEmpty(email))
             {
                 var user = _db.Usuarios.FirstOrDefault(u => u.Email == email);
                 if (user != null) return user.Id;
             }
+
+            _logger.LogWarning("No se pudo obtener el ID del usuario");
             return null;
         }
 

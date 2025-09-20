@@ -1,4 +1,4 @@
-@model WebApp.Models.Producto
+@model WebApp.Models.ProductoCreateViewModel
 
 @{
     ViewData["Title"] = "Crear Producto";
@@ -33,14 +33,14 @@
                     <!-- Precio -->
                     <div class="form-group mb-3">
                         <label asp-for="Precio"></label>
-                        <input asp-for="Precio" class="form-control" type="number" step="0.01" />
+                        <input asp-for="Precio" class="form-control" type="number" step="0.01" required/>
                         <span asp-validation-for="Precio" class="text-danger"></span>
                     </div>
 
                     <!-- Stock -->
                     <div class="form-group mb-3">
                         <label asp-for="Stock"></label>
-                        <input asp-for="Stock" class="form-control" type="number" />
+                        <input asp-for="Stock" class="form-control" type="number" required/>
                         <span asp-validation-for="Stock" class="text-danger"></span>
                     </div>
 
