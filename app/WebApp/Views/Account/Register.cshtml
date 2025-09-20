@@ -23,11 +23,18 @@
                                 
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 
-                                <!-- Nombre completo -->
-                                <div class="form-group">
-                                    <input asp-for="FullName" class="form-control form-control-user" 
-                                           placeholder="Nombre completo" />
-                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                <!-- Nombre y Apellido -->
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input asp-for="Nombre" class="form-control form-control-user" 
+                                            placeholder="Nombre" />
+                                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input asp-for="Apellido" class="form-control form-control-user" 
+                                            placeholder="Apellido" />
+                                        <span asp-validation-for="Apellido" class="text-danger"></span>
+                                    </div>
                                 </div>
                                 
                                 <!-- Email -->

@@ -4,10 +4,15 @@ namespace WebApp.Models
 {
     public class RegisterViewModel
     {
-        [Required(ErrorMessage = "El nombre completo es requerido")]
+        [Required(ErrorMessage = "El nombre es requerido")]
         [StringLength(100, ErrorMessage = "El nombre no puede exceder 100 caracteres")]
-        [Display(Name = "Nombre completo")]
-        public string? FullName { get; set; }
+        [Display(Name = "Nombre")]
+        public string? Nombre { get; set; }
+
+        [Required(ErrorMessage = "El apellido es requerido")]
+        [StringLength(100, ErrorMessage = "El apellido no puede exceder 100 caracteres")]
+        [Display(Name = "Apellido")]
+        public string? Apellido { get; set; }
 
         [Required(ErrorMessage = "El email es requerido")]
         [EmailAddress(ErrorMessage = "El formato del email no es válido")]

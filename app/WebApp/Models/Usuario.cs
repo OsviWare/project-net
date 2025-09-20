@@ -12,6 +12,8 @@ namespace WebApp.Models
         [StringLength(100)]
         public string? Nombre { get; set; }
 
+        public string Apellido { get; set; } = null!;
+
         [Required]
         [EmailAddress]
         public string? Email { get; set; }

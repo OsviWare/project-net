@@ -48,6 +48,22 @@ namespace WebApp.Data
                 new Categoria { Id = 4, Nombre = "Deportes", Descripcion = "Equipamiento y ropa deportiva" },
                 new Categoria { Id = 5, Nombre = "Libros", Descripcion = "Libros de todo tipo" }
             );
-        }
+
+            modelBuilder.Entity<Producto>(entity =>
+            {
+                entity.ToTable("productos");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Nombre).HasColumnName("nombre");
+                entity.Property(e => e.Descripcion).HasColumnName("descripcion");
+                entity.Property(e => e.Precio).HasColumnName("precio");
+                entity.Property(e => e.Stock).HasColumnName("stock");
+                entity.Property(e => e.ImagenUrl).HasColumnName("imagen_url");
+                entity.Property(e => e.CategoriaId).HasColumnName("CategoriaId");
+                entity.Property(e => e.UsuarioId).HasColumnName("UsuarioId");
+                entity.Property(e => e.FechaCreacion).HasColumnName("FechaCreacion");
+                entity.Property(e => e.Activo).HasColumnName("activo");
+            });
+                }
     }
 }

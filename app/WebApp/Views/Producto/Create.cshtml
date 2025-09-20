@@ -1,0 +1,72 @@
+@model WebApp.Models.Producto
+
+@{
+    ViewData["Title"] = "Crear Producto";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm my-4">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Registrar nuevo producto</h3>
+
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Nombre -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Nombre"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Descripcion"></label>
+                        <textarea asp-for="Descripcion" class="form-control"></textarea>
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+
+                    <!-- Precio -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Precio"></label>
+                        <input asp-for="Precio" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="Precio" class="text-danger"></span>
+                    </div>
+
+                    <!-- Stock -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Stock"></label>
+                        <input asp-for="Stock" class="form-control" type="number" />
+                        <span asp-validation-for="Stock" class="text-danger"></span>
+                    </div>
+
+                    <!-- Imagen URL -->
+                    <div class="form-group mb-3">
+                        <label asp-for="ImagenUrl"></label>
+                        <input asp-for="ImagenUrl" class="form-control" />
+                        <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+                    </div>
+
+                    <!-- Categoría -->
+                    <div class="form-group mb-3">
+                        <label asp-for="CategoriaId">Categoría</label>
+                        <select asp-for="CategoriaId" class="form-control" asp-items="@(new SelectList(ViewBag.Categorias, "Id", "Nombre"))">
+                            <option value="">-- Seleccione --</option>
+                        </select>
+                        <span asp-validation-for="CategoriaId" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Registrar Producto</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

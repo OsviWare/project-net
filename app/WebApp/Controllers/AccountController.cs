@@ -35,16 +35,16 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    var user = await _authService.Authenticate(model.Email!, model.Password!);
+                    var usuario = await _authService.Authenticate(model.Email!, model.Password!);
                     
-                    if (user != null && user.Activo)
+                    if (usuario != null && usuario.Activo)
                     {
                         var claims = new List<Claim>
                         {
-                            new Claim(ClaimTypes.Name, user.Nombre!),
-                            new Claim(ClaimTypes.Email, user.Email!),
-                            new Claim(ClaimTypes.Role, user.Rol?.Nombre ?? "Usuario"),
-                            new Claim("UserId", user.Id.ToString())
+                            new Claim(ClaimTypes.Name, usuario.Nombre!),
+                            new Claim(ClaimTypes.Email, usuario.Email!),
+                            new Claim(ClaimTypes.Role, usuario.Rol?.Nombre ?? "Usuario"),
+                            new Claim("usuarioId", usuario.Id.ToString())
                         };
 
                         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -59,7 +59,7 @@ namespace WebApp.Controllers
                             new ClaimsPrincipal(claimsIdentity),
                             authProperties);
 
-                        _logger.LogInformation($"Usuario {user.Email} ha iniciado sesión.");
+                        _logger.LogInformation($"Usuario {usuario.Email} ha iniciado sesión.");
                         
                         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                         {
@@ -113,36 +113,40 @@ namespace WebApp.Controllers
                 try
                 {
                     // Mapear desde RegisterViewModel a Usuario
-                    var user = new Usuario
+                    var usuario = new Usuario
                     {
-                        Nombre = model.FullName,
+                        Nombre = model.Nombre,
+                        Apellido = model.Apellido,
                         Email = model.Email,
                         Telefono = model.PhoneNumber,
                         Direccion = model.Direccion,
                         Ciudad = model.City,
-                        RolId = 2, // usuario_sistema por defecto
-                        Activo = true
+                        RolId = 2
                     };
 
-                    var result = await _authService.Register(user, model.Password!);
+                    var result = await _authService.Register(usuario, model.Password!);
                     
-                    if (result != null)
+                    if (usuario != null)
                     {
                         _logger.LogInformation($"Nuevo usuario registrado: {model.Email}");
                         
                         // Iniciar sesión automáticamente después del registro
                         var claims = new List<Claim>
                         {
-                            new Claim(ClaimTypes.Name, result.Nombre!),
-                            new Claim(ClaimTypes.Email, result.Email!),
-                            new Claim(ClaimTypes.Role, result.Rol?.Nombre ?? "Usuario"),
-                            new Claim("UserId", result.Id.ToString())
+                            new Claim(ClaimTypes.Name, usuario.Nombre!),
+                            new Claim(ClaimTypes.Email, usuario.Email!),
+                            new Claim(ClaimTypes.Role, usuario.Rol?.Nombre ?? "Usuario"),
+                            new Claim("usuarioId", usuario.Id.ToString())
                         };
 
-                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var claimsIdentity = new ClaimsIdentity(
+                            claims, CookieAuthenticationDefaults.AuthenticationScheme
+                        );
+
                         await HttpContext.SignInAsync(
                             CookieAuthenticationDefaults.AuthenticationScheme,
-                            new ClaimsPrincipal(claimsIdentity));
+                            new ClaimsPrincipal(claimsIdentity)
+                        );
 
                         return RedirectToAction("Index", "Home");
                     }
