@@ -1,22 +1,46 @@
 ﻿@{
-    // CONFIGURACIÓN DEL TÍTULO DE LA PÁGINA PARA EL LAYOUT
     ViewData["Title"] = "Home Page";
+    var isAuthenticated = ViewBag.IsAuthenticated as bool? ?? false;
 }
 
 <!-- CONTENEDOR PRINCIPAL DE LA PÁGINA -->
 <div class="container-fluid">
     
     <!-- SECCIÓN HERO/BIENVENIDA -->
+    <!-- SECCIÓN HERO/BIENVENIDA -->
     <div class="hero-section text-center">
-        <h1 class="h3 mb-2">¡Bienvenido a BoliviaMarket!</h1>
-        <p class="mb-4">La plataforma donde lo que ya no usas puede ser el tesoro de alguien más</p>
-        <!-- BOTÓN PARA PUBLICAR PRODUCTO -->
-        <a href="#" class="btn btn-light btn-icon-split">
-            <span class="icon text-white-50">
-                <i class="fas fa-plus"></i>
-            </span>
-            <span class="text">Publicar un producto</span>
-        </a>
+        @if (isAuthenticated)
+        {
+            <h1 class="h3 mb-2">¡Bienvenido de vuelta, @ViewBag.UserName!</h1>
+            <p class="mb-4">¿Qué te gustaría hacer hoy?</p>
+            <!-- BOTÓN PARA PUBLICAR PRODUCTO -->
+            <a href="#" class="btn btn-light btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span class="text">Publicar un producto</span>
+            </a>
+        }
+        else
+        {
+            <h1 class="h3 mb-2">¡Bienvenido a BoliviaMarket!</h1>
+            <p class="mb-4">La plataforma donde lo que ya no usas puede ser el tesoro de alguien más</p>
+            <!-- BOTONES PARA USUARIOS NO AUTENTICADOS -->
+            <div class="d-flex justify-content-center gap-3">
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </span>
+                    <span class="text">Iniciar Sesión</span>
+                </a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-user-plus"></i>
+                    </span>
+                    <span class="text">Registrarse</span>
+                </a>
+            </div>
+        }
     </div>
     
 

@@ -1,3 +1,10 @@
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var isAuthenticated = HttpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? false;
+    var userName = HttpContextAccessor.HttpContext?.User.Identity?.Name;
+}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -107,13 +114,28 @@
                 Mi Cuenta
             </div>
 
+            <!-- OPCIONES DE USUARIO SEGÚN AUTENTICACIÓN Y ROL -->
+            @if (isAuthenticated)
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Producto" asp-action="Create">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Publicar Producto</span>
+                    </a>
+                </li>
+                
+                @if (User.IsInRole("Administrador"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Dashboard" asp-action="AdminPanel">
+                            <i class="fas fa-lock"></i>
+                            <span>Panel Administrador</span>
+                        </a>
+                    </li>
+                }
+            }
+
             <!-- ELEMENTOS DE NAVEGACIÓN - OPCIONES DE USUARIO -->
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>Publicar Producto</span>
-                </a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link" href="/Producto/Index">
                     <i class="fas fa-store"></i>
@@ -191,16 +213,17 @@
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- ELEMENTO - INFORMACIÓN DE USUARIO Y MENÚ DESPLEGABLE -->
-                        @if (User.Identity.IsAuthenticated)
+
+                        @if (isAuthenticated)
                         {
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">@User.Identity.Name</span>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">@userName</span>
                                     <img class="img-profile rounded-circle" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" asp-controller="Dashboard" asp-action="Profile">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Perfil
                                     </a>
@@ -208,6 +231,17 @@
                                         <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Configuración
                                     </a>
+                                    <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index">
+                                        <i class="fas fa-tachometer-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Dashboard
+                                    </a>
+                                    @if (User.IsInRole("Administrador"))
+                                    {
+                                        <a class="dropdown-item" asp-controller="Dashboard" asp-action="AdminPanel">
+                                            <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Panel Admin
+                                        </a>
+                                    }
                                     <div class="dropdown-divider"></div>
                                     <form asp-controller="Account" asp-action="Logout" method="post">
                                         @Html.AntiForgeryToken()
@@ -225,6 +259,12 @@
                                 <a class="nav-link" asp-controller="Account" asp-action="Login">
                                     <i class="fas fa-sign-in-alt"></i>
                                     <span>Iniciar Sesión</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span>Registrarse</span>
                                 </a>
                             </li>
                         }

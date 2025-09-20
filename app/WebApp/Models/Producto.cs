@@ -1,21 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApp.Models
 {
+    [Table("productos")] 
     public class Producto
     {
-        [Key]
-        public int Id_producto { get; set; }
-        [Required(ErrorMessage = "El nombre es obligatorio")]
-        public string Nombre { get; set; }
-        [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor que cero")]
+        public int Id { get; set; }
+        public string Nombre { get; set; } = null!;
+        public string? Descripcion { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
         public decimal Precio { get; set; }
-        [Range(0, int.MaxValue, ErrorMessage = "El stock no puede ser negativo")]
-        public int Stock { get; set; }
-        public DateTime Fecha_creacion { get; set; }
+
+        public int Stock { get; set; } = 0;
+        public string? ImagenUrl { get; set; }
+
+        [ForeignKey("Categoria")]
+        public int CategoriaId { get; set; }
+        public virtual Categoria Categoria { get; set; } = null!;
+
+        [ForeignKey("Usuario")]
+        public int UsuarioId { get; set; }
+        public virtual Usuario Usuario { get; set; } = null!;
+
+        public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+        public bool Activo { get; set; } = true;
     }
 }

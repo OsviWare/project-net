@@ -81,3 +81,37 @@ body {
     border-radius: 10px;
     margin-bottom: 30px;
 }
+
+/* Colores de la bandera de Bolivia */
+.flag-color-1 { color: #D52B1E; background-color: #D52B1E; } /* Rojo */
+.flag-color-2 { color: #F9E300; background-color: #F9E300; } /* Amarillo */
+.flag-color-3 { color: #007934; background-color: #007934; } /* Verde */
+
+.hero-section {
+    background: linear-gradient(135deg, #D52B1E 0%, #F9E300 50%, #007934 100%);
+    padding: 3rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    color: white;
+}
+
+.category-item:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+.product-card {
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.category-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}

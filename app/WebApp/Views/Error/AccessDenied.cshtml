@@ -1,0 +1,10 @@
+@{
+    ViewData["Title"] = "Acceso Denegado";
+}
+
+<div class="container text-center">
+    <h1 class="text-danger">Acceso Denegado</h1>
+    <p>No tienes permisos suficientes para acceder a esta página.</p>
+    <p>Tu rol actual: <strong>@User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value</strong></p>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Volver al Inicio</a>
+</div>

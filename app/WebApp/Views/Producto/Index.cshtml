@@ -1,23 +1,49 @@
-@model List<WebApp.Models.Producto>
+@model IEnumerable<WebApp.Models.Producto>
 
-<h2>Lista de Productos</h2>
+@{
+    ViewData["Title"] = "Productos";
+}
 
+<h1>Productos</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Precio</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Id) <!-- Cambiar de Id_producto a Id -->
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Precio)
+            </th>
+            <!-- otras columnas... -->
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var producto in Model)
-        {
-            <tr>
-                <td>@producto.Id_producto</td>
-                <td>@producto.Nombre</td>
-                <td> @producto.Precio.ToString("Bs.")</td>
-            </tr>
-        }
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id) <!-- Cambiar de Id_producto a Id -->
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Precio)
+            </td>
+            <!-- otras celdas... -->
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
     </tbody>
 </table>

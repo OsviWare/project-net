@@ -23,20 +23,21 @@
                                 
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-                                        <input asp-for="FullName" class="form-control form-control-user" 
-                                               placeholder="Nombre completo" />
-                                        <span asp-validation-for="FullName" class="text-danger"></span>
-                                    </div>
+                                <!-- Nombre completo -->
+                                <div class="form-group">
+                                    <input asp-for="FullName" class="form-control form-control-user" 
+                                           placeholder="Nombre completo" />
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
                                 </div>
                                 
+                                <!-- Email -->
                                 <div class="form-group">
                                     <input asp-for="Email" class="form-control form-control-user" 
                                            placeholder="Email" />
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                                 
+                                <!-- Contraseña y confirmación -->
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input asp-for="Password" type="password" class="form-control form-control-user" 
@@ -50,6 +51,7 @@
                                     </div>
                                 </div>
                                 
+                                <!-- Teléfono y Ciudad -->
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input asp-for="PhoneNumber" class="form-control form-control-user" 
@@ -62,6 +64,16 @@
                                         <span asp-validation-for="City" class="text-danger"></span>
                                     </div>
                                 </div>
+
+                                <!-- Dirección (si existe en el modelo) -->
+                                @if (ViewData.ModelMetadata.Properties.Any(p => p.PropertyName == "Direccion"))
+                                {
+                                    <div class="form-group">
+                                        <input asp-for="Direccion" class="form-control form-control-user" 
+                                               placeholder="Dirección" />
+                                        <span asp-validation-for="Direccion" class="text-danger"></span>
+                                    </div>
+                                }
                                 
                                 <button type="submit" class="btn btn-primary btn-user btn-block">
                                     Registrar Cuenta

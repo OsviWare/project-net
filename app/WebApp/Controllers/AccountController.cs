@@ -1,84 +1,171 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using WebApp.Models;
+using WebApp.Services;
+using Microsoft.AspNetCore.Authentication;
 
 namespace WebApp.Controllers
 {
     public class AccountController : Controller
     {
-        // GET: /Account/Login
-        public IActionResult Login()
+        private readonly IAuthService _authService;
+        private readonly ILogger<AccountController> _logger;
+
+        public AccountController(IAuthService authService, ILogger<AccountController> logger)
         {
-            // Si el usuario ya está autenticado, redirigir al home
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            
+            _authService = authService;
+            _logger = logger;
+        }
+
+        [AllowAnonymous]
+        public IActionResult Login(string returnUrl = "/")
+        {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
-        // POST: /Account/Login
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = "/")
         {
-            // Esto es un ejemplo básico - en una aplicación real deberías validar contra una base de datos
             if (ModelState.IsValid)
             {
-                // Simulación de autenticación (reemplazar con lógica real)
-                if (model.Email == "usuario@ejemplo.com" && model.Password == "Password123!")
+                try
                 {
-                    // Aquí iría la lógica real de autenticación
-                    // Por ahora solo redirigimos al home
-                    return RedirectToAction("Index", "Home");
+                    var user = await _authService.Authenticate(model.Email!, model.Password!);
+                    
+                    if (user != null && user.Activo)
+                    {
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Name, user.Nombre!),
+                            new Claim(ClaimTypes.Email, user.Email!),
+                            new Claim(ClaimTypes.Role, user.Rol?.Nombre ?? "Usuario"),
+                            new Claim("UserId", user.Id.ToString())
+                        };
+
+                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var authProperties = new AuthenticationProperties
+                        {
+                            IsPersistent = model.RememberMe,
+                            ExpiresUtc = DateTimeOffset.UtcNow.AddHours(2)
+                        };
+
+                        await HttpContext.SignInAsync(
+                            CookieAuthenticationDefaults.AuthenticationScheme,
+                            new ClaimsPrincipal(claimsIdentity),
+                            authProperties);
+
+                        _logger.LogInformation($"Usuario {user.Email} ha iniciado sesión.");
+                        
+                        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                        {
+                            return Redirect(returnUrl);
+                        }
+                        return RedirectToAction("Index", "Home");
+                    }
+                    
+                    ModelState.AddModelError("", "Credenciales inválidas o usuario inactivo");
+                    _logger.LogWarning($"Intento de login fallido para: {model.Email}");
                 }
-                else
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError(string.Empty, "Intento de inicio de sesión no válido.");
+                    _logger.LogError(ex, "Error durante el login");
+                    ModelState.AddModelError("", "Error durante la autenticación");
                 }
             }
-
-            // Si llegamos hasta aquí, algo falló, volver a mostrar el formulario
+            
+            ViewData["ReturnUrl"] = returnUrl;
             return View(model);
         }
 
-        // GET: /Account/Register
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            _logger.LogInformation("Usuario cerró sesión.");
+            return RedirectToAction("Index", "Home");
+        }
+
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
         }
 
-        // POST: /Account/Register
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Aquí iría la lógica de registro de usuario
-                // Por ahora solo redirigimos al login
-                return RedirectToAction("Login", "Account");
+                try
+                {
+                    // Mapear desde RegisterViewModel a Usuario
+                    var user = new Usuario
+                    {
+                        Nombre = model.FullName,
+                        Email = model.Email,
+                        Telefono = model.PhoneNumber,
+                        Direccion = model.Direccion,
+                        Ciudad = model.City,
+                        RolId = 2, // usuario_sistema por defecto
+                        Activo = true
+                    };
+
+                    var result = await _authService.Register(user, model.Password!);
+                    
+                    if (result != null)
+                    {
+                        _logger.LogInformation($"Nuevo usuario registrado: {model.Email}");
+                        
+                        // Iniciar sesión automáticamente después del registro
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Name, result.Nombre!),
+                            new Claim(ClaimTypes.Email, result.Email!),
+                            new Claim(ClaimTypes.Role, result.Rol?.Nombre ?? "Usuario"),
+                            new Claim("UserId", result.Id.ToString())
+                        };
+
+                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        await HttpContext.SignInAsync(
+                            CookieAuthenticationDefaults.AuthenticationScheme,
+                            new ClaimsPrincipal(claimsIdentity));
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Error durante el registro");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error durante el registro");
+                    
+                    if (ex.Message.Contains("email ya está registrado"))
+                    {
+                        ModelState.AddModelError("", "El email ya está registrado");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Error durante el registro");
+                    }
+                }
             }
-
-            // Si llegamos hasta aquí, algo falló, volver a mostrar el formulario
             return View(model);
-        }
-
-        // POST: /Account/Logout
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
-        {
-            // Aquí iría la lógica de logout
-            // Por ahora solo redirigimos al login
-            return RedirectToAction("Login", "Account");
-        }
-
-        // GET: /Account/AccessDenied
-        public IActionResult AccessDenied()
-        {
-            return View();
         }
     }
 }

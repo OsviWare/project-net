@@ -5,11 +5,11 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql-db
+      mysql-db:
+        condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - MYSQL_HOST=mysql-db
-      - MYSQL_PORT=3307
+      - ConnectionStrings__DefaultConnection=Server=mysql-db;Port=3306;Database=appdb;User=appuser;Password=apppassword;
     networks:
       - project-net
     restart: unless-stopped
@@ -23,15 +23,15 @@ services:
       MYSQL_DATABASE: appdb
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppassword
-    command: --port=3307  # Esto es importante!
+    # command: --port=3307  # Esto es importante!
     volumes:
       - mysql-data:/var/lib/mysql
     ports:
-      - "3307:3307"  # Puerto mapeado correctamente
+      - "3307:3306"  # Puerto mapeado correctamente
     networks:
       - project-net
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-P", "3307", "-u", "root", "-prootpassword"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-P", "3306", "-u", "root", "-prootpassword"]
       interval: 10s
       timeout: 5s
       retries: 10
