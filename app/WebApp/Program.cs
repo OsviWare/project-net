@@ -72,4 +72,11 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Seed data inicial
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await WebApp.Data.DatabaseSeeder.SeedData(context);
+}
+
 app.Run();

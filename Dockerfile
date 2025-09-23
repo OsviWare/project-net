@@ -23,9 +23,10 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 # Copiar la aplicación desde la etapa build
 COPY --from=build /app/publish .
 
-# Copiar entrypoint
-COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
-
 EXPOSE 8080
-ENTRYPOINT ["./entrypoint.sh"]
+
+# Crear script inline para esperar MySQL y luego ejecutar la aplicación
+RUN echo '#!/bin/bash\necho "Esperando MySQL..."\nwhile ! nc -z mysql-db 3306; do sleep 1; done\necho "MySQL disponible, iniciando aplicación..."\nexec dotnet WebApp.dll' > /app/start.sh \
+    && chmod +x /app/start.sh
+
+ENTRYPOINT ["/app/start.sh"]
