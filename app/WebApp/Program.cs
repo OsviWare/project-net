@@ -27,8 +27,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 // Configuración de autorización
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Administrador"));
-    options.AddPolicy("UserOnly", policy => policy.RequireRole("Usuario", "Administrador"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("administrador"));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("usuario_sistema", "administrador"));
 });
 
 // Servicios de aplicación

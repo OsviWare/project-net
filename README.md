@@ -96,6 +96,7 @@ netstat -an | findstr :3307
 
 # Construir y ejecutar (primera vez)
 docker-compose up --build
+docker-compose up --build -d
 
 # ✅ La aplicación tardará 2-3 minutos en estar lista
 # Espera a ver el mensaje: "Now listening on: http://[::]:8080"

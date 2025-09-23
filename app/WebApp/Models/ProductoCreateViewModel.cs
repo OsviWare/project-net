@@ -10,7 +10,7 @@ namespace WebApp.Models
         public string? Descripcion { get; set; }
 
         [Required(ErrorMessage = "El precio es obligatorio")]
-        [Range(0.01, 999999.99, ErrorMessage = "El precio debe ser mayor a 0")]
+        [Range(0.01, 999999.99, ErrorMessage = "El precio debe ser mayor a 0")]//-50
         public decimal Precio { get; set; }
 
         [Required(ErrorMessage = "El stock es obligatorio")]
