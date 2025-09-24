@@ -41,7 +41,7 @@ Thumbs.db
 
 # MySQL / base de datos
 db/
-*.sql
+#*.sql
 
 /app/startbootstrap-sb-admin-2-gh-pages/
 /app/startbootstrap-sb-admin-2-gh-pages(1).zip
