@@ -231,16 +231,12 @@
                                         <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Configuración
                                     </a>
-                                    <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index">
-                                        <i class="fas fa-tachometer-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Dashboard
-                                    </a>
-                                    @if (User.IsInRole("Administrador"))
+                                    @if (User.IsInRole("administrador"))
                                     {
                                         <a class="dropdown-item" asp-controller="Dashboard" asp-action="AdminPanel">
                                             <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
                                             Panel Admin
-                                        </a>
+                                        </a> 
                                     }
                                     <div class="dropdown-divider"></div>
                                     <form asp-controller="Account" asp-action="Logout" method="post">

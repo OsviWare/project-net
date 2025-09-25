@@ -1,0 +1,52 @@
+@{
+    ViewData["Title"] = "Panel de Administración";
+}
+
+<div class="container-fluid">
+    <h1>Panel de Administración</h1>
+    <p>Bienvenido al panel de administración, @User.Identity.Name!</p>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gestión de Usuarios</h5>
+                    <p class="card-text">Administrar todos los usuarios del sistema</p>
+                    <a asp-controller="Admin" asp-action="Index" class="btn btn-primary">Gestionar Usuarios</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Estadísticas</h5>
+                    <p class="card-text">Ver estadísticas del sistema</p>
+                    <a href="#" class="btn btn-primary">Ver Estadísticas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Configuración</h5>
+                    <p class="card-text">Configuración del sistema</p>
+                    <a href="#" class="btn btn-primary">Configurar</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Reportes</h5>
+                    <p class="card-text">Generar reportes del sistema</p>
+                    <a href="#" class="btn btn-primary">Generar Reportes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

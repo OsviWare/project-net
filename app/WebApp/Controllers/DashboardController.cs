@@ -3,42 +3,40 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
-    [Authorize] // Requiere autenticación para todo el controlador
+    [Authorize]
     public class DashboardController : Controller
     {
-        // Ruta segura 1: Dashboard principal - Accesible para todos los roles autenticados
         public IActionResult Index()
         {
             return View();
         }
 
-        // Ruta segura 2: Panel de administración - Solo para administradores
-        [Authorize(Roles = "Administrador")]
+        // CAMBIA "Administrador" por "administrador"
+        // [Authorize(Roles = "administrador")]
         public IActionResult AdminPanel()
         {
             return View();
         }
 
-        // Ruta segura 3: Mis productos - Solo para usuarios que pueden vender
-        [Authorize(Roles = "Administrador,Usuario")]
+        // También corrige los otros roles
+        [Authorize(Roles = "administrador,usuario_sistema")]
         public IActionResult MyProducts()
         {
             return View();
         }
 
-        // Ruta segura 4: Perfil de usuario - Accesible para todos los autenticados
         public IActionResult Profile()
         {
             return View();
         }
 
-        [Authorize(Roles = "Usuario,Administrador")]
+        [Authorize(Roles = "usuario_sistema,administrador")]
         public IActionResult UserArea()
         {
             return Content("¡Área para usuarios registrados!");
         }
 
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "administrador")]
         public IActionResult AdminOnly()
         {
             return Content("¡Esta es una página solo para administradores!");

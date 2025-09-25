@@ -1,22 +1,42 @@
-
 @model IEnumerable<WebApp.Models.Producto>
 @{
     ViewData["Title"] = "Productos";
+    var categoriaSeleccionada = ViewBag.CategoriaSeleccionada as string;
 }
-<h2>Productos</h2>
+
+@if (!string.IsNullOrEmpty(categoriaSeleccionada))
+{
+    <h2>Productos en @categoriaSeleccionada</h2>
+}
+else
+{
+    <h2>Todos los productos</h2>
+}
+
 <div class="row">
-    @foreach(var p in Model)
+    @if (!Model.Any())
     {
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <img src="@(p.ImagenUrl ?? "/images/placeholder.png")" class="card-img-top" style="height:180px;object-fit:cover" />
-                <div class="card-body">
-                    <h5 class="card-title">@p.Nombre</h5>
-                    <p class="card-text">@p.Descripcion</p>
-                    <p class="card-text"><strong>Bs. @p.Precio.ToString("F2")</strong></p>
-                    <a class="btn btn-sm btn-primary" href="@Url.Action("Details","Producto", new { id = p.Id })">Ver</a>
-                </div>
+        <div class="col-12">
+            <div class="alert alert-info">
+                No hay productos en esta categoría.
             </div>
         </div>
+    }
+    else
+    {
+        @foreach (var p in Model)
+        {
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img src="@(p.ImagenUrl ?? "/images/placeholder.png")" class="card-img-top" style="height:180px;object-fit:cover" />
+                    <div class="card-body">
+                        <h5 class="card-title">@p.Nombre</h5>
+                        <p class="card-text">@p.Descripcion</p>
+                        <p class="card-text"><strong>Bs. @p.Precio.ToString("F2")</strong></p>
+                        <a class="btn btn-sm btn-primary" href="@Url.Action("Details","Producto", new { id = p.Id })">Ver</a>
+                    </div>
+                </div>
+            </div>
+        }
     }
 </div>
