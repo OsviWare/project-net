@@ -1,9 +1,24 @@
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
+@inject WebApp.Data.ApplicationDbContext DbContext
+@using WebApp.Services
+@using WebApp.Models
 
 @{
     var isAuthenticated = HttpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? false;
     var userName = HttpContextAccessor.HttpContext?.User.Identity?.Name;
+    // Calcular contador del carrito desde la sesión
+    var cartCount = 0;
+    try
+    {
+        var session = HttpContextAccessor.HttpContext?.Session;
+        var cart = session?.GetObject<CartViewModel>("Cart");
+        if (cart != null && cart.Items != null)
+        {
+            cartCount = cart.Items.Sum(i => i.Cantidad);
+        }
+    }
+    catch { cartCount = 0; }
 }
 <!DOCTYPE html>
 <html lang="es">
@@ -38,6 +53,21 @@
     
     <!-- SECCIÓN PARA ESTILOS ADICIONALES EN VISTAS ESPECÍFICAS -->
     @await RenderSectionAsync("Styles", required: false)
+    <style>
+        /* Efecto visual temporal al presionar una categoría */
+        .cat-pressed {
+            transform: scale(0.98);
+            background-color: rgba(255,255,255,0.06);
+            transition: transform 120ms ease, background-color 200ms ease;
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.15);
+        }
+
+        /* Clase para categoría activa permanente (servidor) */
+        .cat-active > .nav-link {
+            background-color: rgba(255,255,255,0.05);
+            font-weight: 600;
+        }
+    </style>
 </head>
 
 <body id="page-top">
@@ -74,37 +104,38 @@
                 Categorías
             </div>
 
-            <!-- ELEMENTOS DE NAVEGACIÓN - CATEGORÍAS DE PRODUCTOS -->
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-tshirt"></i>
-                    <span>Ropa y Accesorios</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-mobile-alt"></i>
-                    <span>Tecnología</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-couch"></i>
-                    <span>Hogar y Muebles</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-futbol"></i>
-                    <span>Deportes</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-book"></i>
-                    <span>Libros</span>
-                </a>
-            </li>
+            <!-- ELEMENTOS DE NAVEGACIÓN - CATEGORÍAS DE PRODUCTOS (dinámicas) -->
+            @{
+                var categorias = new List<WebApp.Models.Categoria>();
+                try
+                {
+                    categorias = DbContext.Categorias.OrderBy(c => c.Nombre).ToList();
+                }
+                catch { }
+            }
+
+            @foreach (var cat in categorias)
+            {
+                // Marcar la categoría activa si coincide con la seleccionada por el controlador
+                var isActive = false;
+                try { isActive = (ViewBag.SelectedCategoriaId != null && (int)ViewBag.SelectedCategoriaId == cat.Id); } catch { isActive = false; }
+                <li class="nav-item @(isActive ? "active cat-active" : "")">
+                    <a class="nav-link" asp-controller="Producto" asp-action="Index" asp-route-categoriaId="@cat.Id" data-cat-id="@cat.Id">
+                        <i class="fas fa-tags"></i>
+                        <span>@cat.Nombre</span>
+                    </a>
+                </li>
+            }
+
+            @if (User.IsInRole("administrador"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Categoria" asp-action="Index">
+                        <i class="fas fa-tags"></i>
+                        <span>Gestionar Categorías</span>
+                    </a>
+                </li>
+            }
 
             <!-- SEPARADOR -->
             <hr class="sidebar-divider">
@@ -192,11 +223,11 @@
                     <!-- ELEMENTOS DE LA BARRA SUPERIOR (lado derecho) -->
                     <ul class="navbar-nav ml-auto">
                         <!-- ELEMENTO - CARRITO DE COMPRAS -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="cartDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <li class="nav-item mx-1">
+                            <a class="nav-link" asp-controller="Cart" asp-action="Index" title="Ver carrito">
                                 <i class="fas fa-shopping-cart fa-fw"></i>
                                 <!-- CONTADOR DE PRODUCTOS EN EL CARRITO -->
-                                <span class="badge badge-danger badge-counter">3</span>
+                                <span class="badge badge-danger badge-counter">@cartCount</span>
                             </a>
                         </li>
 
@@ -235,7 +266,7 @@
                                         <i class="fas fa-tachometer-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Dashboard
                                     </a>
-                                    @if (User.IsInRole("Administrador"))
+                                    @if (User.IsInRole("administrador"))
                                     {
                                         <a class="dropdown-item" asp-controller="Dashboard" asp-action="AdminPanel">
                                             <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -274,6 +305,20 @@
 
                 <!-- CONTENEDOR PRINCIPAL DEL CONTENIDO DINÁMICO -->
                 <div class="container-fluid">
+                    @if (TempData["CartSuccess"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["CartSuccess"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (TempData["CartError"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["CartError"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
                     <!-- SECCIÓN DONDE SE CARGARÁ EL CONTENIDO ESPECÍFICO DE CADA VISTA -->
                     @RenderBody()
                 </div>
@@ -312,6 +357,32 @@
 
     <!-- SECCIÓN PARA SCRIPTS ADICIONALES EN VISTAS ESPECÍFICAS -->
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        (function() {
+            // Efecto al presionar categoría: aplicar .cat-pressed temporalmente y quitar al presionar otra
+            const sidebar = document.getElementById('accordionSidebar');
+            if (!sidebar) return;
+
+            sidebar.addEventListener('click', function(e) {
+                const link = e.target.closest('a.nav-link');
+                if (!link) return;
+
+                // encontrar li padre
+                const li = link.closest('li.nav-item');
+                if (!li) return;
+
+                // quitar efecto de otros (pero mantener la clase .cat-active que viene del servidor)
+                const pressed = sidebar.querySelectorAll('.cat-pressed');
+                pressed.forEach(p => p.classList.remove('cat-pressed'));
+
+                // aplicar efecto en el li
+                li.classList.add('cat-pressed');
+
+                // quitar el efecto después de 300ms (vuelve a la normalidad)
+                setTimeout(() => li.classList.remove('cat-pressed'), 300);
+            });
+        })();
+    </script>
 </body>
 
 </html>

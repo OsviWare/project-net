@@ -11,7 +11,7 @@
             <div class="card-body">
                 <h3 class="card-title mb-4">Registrar nuevo producto</h3>
 
-                <form asp-action="Create" method="post">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
 
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -46,9 +46,10 @@
 
                     <!-- Imagen URL -->
                     <div class="form-group mb-3">
-                        <label asp-for="ImagenUrl"></label>
-                        <input asp-for="ImagenUrl" class="form-control" />
-                        <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+                        <label>Imagen (subir archivo)</label>
+                        <input asp-for="ImagenFile" type="file" class="form-control" accept="image/*" />
+                        <span asp-validation-for="ImagenFile" class="text-danger"></span>
+                        <small class="form-text text-muted">Si no sube imagen, puede dejar el campo Imagen URL manualmente en el formulario de edición.</small>
                     </div>
 
                     <!-- Categoría -->

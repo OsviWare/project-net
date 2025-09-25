@@ -15,4 +15,13 @@
         <p><strong>Vendedor:</strong> @Model.Usuario?.Nombre</p>
     </div>
 </div>
-<a class="btn btn-secondary mt-3" href="@Url.Action("Index")">Volver</a>
+<form asp-controller="Cart" asp-action="AddToCart" method="post" class="mt-3">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="productoId" value="@Model.Id" />
+    <div class="mb-2">
+        <label class="form-label">Cantidad</label>
+        <input type="number" name="cantidad" value="1" min="1" max="@Model.Stock" class="form-control w-25" />
+    </div>
+    <button type="submit" class="btn btn-success">Añadir al carrito</button>
+    <a class="btn btn-secondary ms-2" href="@Url.Action("Index")">Volver</a>
+</form>

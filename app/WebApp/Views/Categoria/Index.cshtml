@@ -1,0 +1,31 @@
+@model IEnumerable<WebApp.Models.Categoria>
+@{
+    ViewData["Title"] = "Gestionar Categorías";
+}
+
+<h2>Gestionar Categorías</h2>
+
+<a class="btn btn-primary mb-3" asp-action="Create">Crear Categoría</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach(var c in Model)
+    {
+        <tr>
+            <td>@c.Id</td>
+            <td>@c.Nombre</td>
+            <td>@c.Descripcion</td>
+            <td>
+                <a class="btn btn-sm btn-secondary" asp-action="Edit" asp-route-id="@c.Id">Editar</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

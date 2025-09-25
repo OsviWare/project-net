@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApp.Models
 {
     public class ProductoCreateViewModel
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "El nombre es obligatorio")]
         public string Nombre { get; set; } = null!;
 
@@ -18,6 +20,9 @@ namespace WebApp.Models
         public int Stock { get; set; }
 
         public string? ImagenUrl { get; set; }
+
+    // Archivo de imagen que se puede subir desde el formulario
+    public IFormFile? ImagenFile { get; set; }
 
         [Required(ErrorMessage = "Debe seleccionar una categoría")]
         public int CategoriaId { get; set; }

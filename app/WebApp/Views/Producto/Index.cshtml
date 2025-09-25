@@ -7,6 +7,8 @@
 <div class="row">
     @foreach(var p in Model)
     {
+        var currentUserEmail = User.Identity?.Name;
+        var isAdmin = User.IsInRole("administrador");
         <div class="col-md-4">
             <div class="card mb-3">
                 <img src="@(p.ImagenUrl ?? "/images/placeholder.png")" class="card-img-top" style="height:180px;object-fit:cover" />
@@ -15,6 +17,17 @@
                     <p class="card-text">@p.Descripcion</p>
                     <p class="card-text"><strong>Bs. @p.Precio.ToString("F2")</strong></p>
                     <a class="btn btn-sm btn-primary" href="@Url.Action("Details","Producto", new { id = p.Id })">Ver</a>
+                    <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline-block ms-1">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="productoId" value="@p.Id" />
+                        <input type="hidden" name="cantidad" value="1" />
+                        <button class="btn btn-sm btn-success" type="submit">Añadir</button>
+                    </form>
+                    @if (isAdmin || (currentUserEmail != null && p.Usuario?.Email == currentUserEmail))
+                    {
+                        <a class="btn btn-sm btn-secondary ms-1" href="@Url.Action("Edit","Producto", new { id = p.Id })">Editar</a>
+                        <a class="btn btn-sm btn-danger ms-1" href="@Url.Action("Delete","Producto", new { id = p.Id })">Eliminar</a>
+                    }
                 </div>
             </div>
         </div>

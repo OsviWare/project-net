@@ -1,11 +1,13 @@
 
-@model WebApp.Models.Producto
+@model WebApp.Models.ProductoCreateViewModel
 @{
     ViewData["Title"] = "Editar Producto";
 }
 <h2>Editar Producto</h2>
-<form asp-action="Edit" method="post">
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="mb-3">
         <label class="form-label">Nombre</label>
         <input asp-for="Nombre" class="form-control" />
@@ -29,6 +31,33 @@
         <label class="form-label">Imagen URL</label>
         <input asp-for="ImagenUrl" class="form-control" />
     </div>
+    <div class="mb-3">
+        <label class="form-label">Subir nueva imagen</label>
+        <input asp-for="ImagenFile" type="file" class="form-control" accept="image/*" />
+        <span asp-validation-for="ImagenFile" class="text-danger"></span>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+    {
+        <div class="mb-3">
+            <label class="form-label">Imagen actual</label>
+            <div>
+                <img src="@Model.ImagenUrl" alt="Imagen producto" style="max-width:200px;" />
+            </div>
+        </div>
+    }
+    <!-- Categoría -->
+    <div class="form-group mb-3">
+        <label asp-for="CategoriaId">Categoría</label>
+        <select asp-for="CategoriaId" class="form-control" asp-items="@(new SelectList(ViewBag.Categorias, "Id", "Nombre"))">
+            <option value="">-- Seleccione --</option>
+        </select>
+        <span asp-validation-for="CategoriaId" class="text-danger"></span>
+    </div>
     <button class="btn btn-primary">Guardar</button>
-    <a class="btn btn-secondary" href="@Url.Action("Mine")">Cancelar</a>
+        <a class="btn btn-secondary" href="@Url.Action("Mine")">Cancelar</a>
 </form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
