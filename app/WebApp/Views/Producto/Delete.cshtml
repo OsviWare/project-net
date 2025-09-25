@@ -1,16 +1,31 @@
-
 @model WebApp.Models.Producto
 @{
     ViewData["Title"] = "Eliminar Producto";
 }
+
 <h2>Eliminar Producto</h2>
-<div class="alert alert-warning">¿Está seguro que desea eliminar este producto?</div>
-<dl class="row">
-    <dt class="col-sm-3">Nombre</dt><dd class="col-sm-9">@Model.Nombre</dd>
-    <dt class="col-sm-3">Precio</dt><dd class="col-sm-9">@Model.Precio.ToString("F2")</dd>
-</dl>
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="Id" />
-    <button class="btn btn-danger">Eliminar</button>
-    <a class="btn btn-secondary" href="@Url.Action("Mine")">Cancelar</a>
-</form>
+
+<h3>¿Está seguro que desea eliminar este producto?</h3>
+<div>
+    <h4>@Model.Nombre</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Nombre:</dt>
+        <dd class="col-sm-9">@Model.Nombre</dd>
+        
+        <dt class="col-sm-3">Precio:</dt>
+        <dd class="col-sm-9">@Model.Precio.ToString("C")</dd>
+        
+        <dt class="col-sm-3">Stock:</dt>
+        <dd class="col-sm-9">@Model.Stock</dd>
+        
+        <dt class="col-sm-3">Categoría:</dt>
+        <dd class="col-sm-9">@Model.Categoria?.Nombre</dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a asp-action="Mine" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

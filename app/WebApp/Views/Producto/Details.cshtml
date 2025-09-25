@@ -1,18 +1,56 @@
-
 @model WebApp.Models.Producto
 @{
-    ViewData["Title"] = "Detalle Producto";
+    ViewData["Title"] = "Detalles del Producto";
 }
-<h2>@Model.Nombre</h2>
-<div class="row">
-    <div class="col-md-6">
-        <img src="@(Model.ImagenUrl ?? "/images/placeholder.png")" class="img-fluid" />
-    </div>
-    <div class="col-md-6">
-        <h4>Bs. @Model.Precio.ToString("F2")</h4>
-        <p>@Model.Descripcion</p>
-        <p><strong>Stock:</strong> @Model.Stock</p>
-        <p><strong>Vendedor:</strong> @Model.Usuario?.Nombre</p>
-    </div>
+
+<h2>Detalles del Producto</h2>
+
+<div>
+    <h4>@Model.Nombre</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Nombre:</dt>
+        <dd class="col-sm-9">@Model.Nombre</dd>
+        
+        <dt class="col-sm-3">Descripción:</dt>
+        <dd class="col-sm-9">@Model.Descripcion</dd>
+        
+        <dt class="col-sm-3">Precio:</dt>
+        <dd class="col-sm-9">@Model.Precio.ToString("C")</dd>
+        
+        <dt class="col-sm-3">Stock:</dt>
+        <dd class="col-sm-9">@Model.Stock</dd>
+        
+        <dt class="col-sm-3">Categoría:</dt>
+        <dd class="col-sm-9">@Model.Categoria?.Nombre</dd>
+        
+        <dt class="col-sm-3">Vendedor:</dt>
+        <dd class="col-sm-9">@Model.Usuario?.Nombre @Model.Usuario?.Apellido</dd>
+        
+        <dt class="col-sm-3">Fecha de Creación:</dt>
+        <dd class="col-sm-9">@Model.FechaCreacion.ToString("dd/MM/yyyy")</dd>
+        
+        @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+        {
+            <dt class="col-sm-3">Imagen:</dt>
+            <dd class="col-sm-9">
+                <img src="@Model.ImagenUrl" alt="@Model.Nombre" class="img-thumbnail" style="max-width: 200px;" />
+            </dd>
+        }
+    </dl>
 </div>
-<a class="btn btn-secondary mt-3" href="@Url.Action("Index")">Volver</a>
+
+<div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        var canEdit = User.IsInRole("administrador") || 
+                     (User.FindFirst("usuarioId")?.Value == Model.UsuarioId.ToString());
+        
+        if (canEdit)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Eliminar</a>
+        }
+    }
+    <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
+</div>

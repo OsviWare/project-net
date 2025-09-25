@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using WebApp.Data;
 using WebApp.Models;
+using Microsoft.AspNetCore.Mvc.Rendering; // ← AÑADE ESTE USING
 
 namespace WebApp.Controllers
 {
@@ -50,7 +51,8 @@ namespace WebApp.Controllers
         [Authorize]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Categorias = await _db.Categorias.ToListAsync();
+            var categorias = await _db.Categorias.ToListAsync();
+            ViewBag.Categorias = new SelectList(categorias, "Id", "Nombre"); // ← CAMBIA ESTA LÍNEA
             return View();
         }
 
@@ -62,7 +64,8 @@ namespace WebApp.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Modelo inválido: {@ModelState}", ModelState);
-                ViewBag.Categorias = await _db.Categorias.ToListAsync();
+                var categorias = await _db.Categorias.ToListAsync();
+                ViewBag.Categorias = new SelectList(categorias, "Id", "Nombre"); // ← CAMBIA ESTA LÍNEA
                 return View(model);
             }
 
@@ -99,6 +102,187 @@ namespace WebApp.Controllers
                 return View(model);
             }
         }
+
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var producto = await _db.Productos
+                .Include(p => p.Categoria)
+                .Include(p => p.Usuario)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (producto == null || !producto.Activo)
+            {
+                return NotFound();
+            }
+
+            return View(producto);
+        }
+
+        // GET: Producto/Edit/5
+        [Authorize]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var producto = await _db.Productos.FindAsync(id);
+            if (producto == null)
+            {
+                return NotFound();
+            }
+
+            // Verificar que el usuario puede editar este producto
+            if (!CanEdit(producto))
+            {
+                return Forbid();
+            }
+
+            var categorias = await _db.Categorias.ToListAsync();
+            ViewBag.Categorias = new SelectList(categorias, "Id", "Nombre"); // ← CAMBIA ESTA LÍNEA
+            
+            // Mapear a ViewModel para edición
+            var model = new ProductoCreateViewModel
+            {
+                Id = producto.Id,
+                Nombre = producto.Nombre,
+                Descripcion = producto.Descripcion,
+                Precio = producto.Precio,
+                Stock = producto.Stock,
+                ImagenUrl = producto.ImagenUrl,
+                CategoriaId = producto.CategoriaId
+            };
+
+            return View(model);
+        }
+
+
+        // POST: Producto/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Edit(int id, ProductoCreateViewModel model)
+        {
+            if (id != model.Id)
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var categorias = await _db.Categorias.ToListAsync();
+                ViewBag.Categorias = new SelectList(categorias, "Id", "Nombre"); // ← CAMBIA ESTA LÍNEA
+                return View(model);
+            }
+
+            try
+            {
+                var producto = await _db.Productos.FindAsync(id);
+                if (producto == null)
+                {
+                    return NotFound();
+                }
+
+                // Verificar que el usuario puede editar este producto
+                if (!CanEdit(producto))
+                {
+                    return Forbid();
+                }
+
+                // Actualizar propiedades
+                producto.Nombre = model.Nombre;
+                producto.Descripcion = model.Descripcion;
+                producto.Precio = model.Precio;
+                producto.Stock = model.Stock;
+                producto.ImagenUrl = model.ImagenUrl;
+                producto.CategoriaId = model.CategoriaId;
+
+                _db.Update(producto);
+                await _db.SaveChangesAsync();
+
+                _logger.LogInformation("Producto actualizado: {@Producto}", producto);
+                return RedirectToAction(nameof(Mine));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProductoExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        // GET: Producto/Delete/5
+        [Authorize]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var producto = await _db.Productos
+                .Include(p => p.Categoria)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (producto == null)
+            {
+                return NotFound();
+            }
+
+            // Verificar que el usuario puede eliminar este producto
+            if (!CanEdit(producto))
+            {
+                return Forbid();
+            }
+
+            return View(producto);
+        }
+
+        // POST: Producto/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var producto = await _db.Productos.FindAsync(id);
+            if (producto == null)
+            {
+                return NotFound();
+            }
+
+            // Verificar que el usuario puede eliminar este producto
+            if (!CanEdit(producto))
+            {
+                return Forbid();
+            }
+
+            // Soft delete (marcar como inactivo) en lugar de eliminar físicamente
+            producto.Activo = false;
+            _db.Update(producto);
+            await _db.SaveChangesAsync();
+
+            _logger.LogInformation("Producto eliminado (soft delete): {ProductoId}", id);
+            return RedirectToAction(nameof(Mine));
+        }
+
+        private bool ProductoExists(int id)
+        {
+            return _db.Productos.Any(e => e.Id == id);
+        }
+
 
         private int? GetCurrentUserId()
         {
@@ -137,7 +321,7 @@ namespace WebApp.Controllers
 
         private bool CanEdit(Producto producto)
         {
-            if (User.IsInRole("Administrador")) return true;
+            if (User.IsInRole("administrador")) return true;
             var uid = GetCurrentUserId();
             return uid != null && producto.UsuarioId == uid.Value;
         }
@@ -159,5 +343,7 @@ namespace WebApp.Controllers
 
             return View("Index", productos); // Reutiliza la vista Index.cshtml
         }
+
+
     }
 }

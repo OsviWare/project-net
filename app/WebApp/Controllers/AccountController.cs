@@ -124,9 +124,9 @@ namespace WebApp.Controllers
                         RolId = 2
                     };
 
-                    var result = await _authService.Register(usuario, model.Password!);
+                    var usuarioRegistrado = await _authService.Register(usuario, model.Password!);
                     
-                    if (usuario != null)
+                    if (usuarioRegistrado != null)
                     {
                         _logger.LogInformation($"Nuevo usuario registrado: {model.Email}");
                         

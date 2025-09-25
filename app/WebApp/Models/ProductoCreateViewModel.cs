@@ -4,6 +4,8 @@ namespace WebApp.Models
 {
     public class ProductoCreateViewModel
     {
+        public int Id { get; set; }  // ← AÑADE ESTA PROPIEDAD
+
         [Required(ErrorMessage = "El nombre es obligatorio")]
         public string Nombre { get; set; } = null!;
 
