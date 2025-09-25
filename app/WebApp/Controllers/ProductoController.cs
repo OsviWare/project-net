@@ -141,5 +141,23 @@ namespace WebApp.Controllers
             var uid = GetCurrentUserId();
             return uid != null && producto.UsuarioId == uid.Value;
         }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> PorCategoria(int id)
+        {
+            var productos = await _db.Productos
+                .Include(p => p.Categoria)
+                .Include(p => p.Usuario)
+                .Where(p => p.Activo && p.CategoriaId == id)
+                .OrderByDescending(p => p.FechaCreacion)
+                .ToListAsync();
+
+            ViewBag.CategoriaSeleccionada = await _db.Categorias
+                .Where(c => c.Id == id)
+                .Select(c => c.Nombre)
+                .FirstOrDefaultAsync();
+
+            return View("Index", productos); // Reutiliza la vista Index.cshtml
+        }
     }
 }
